@@ -1,4 +1,4 @@
-/* eslint-disable */
+ 
 import typescript from '@rollup/plugin-typescript';
 import fs from 'fs';
 import { rollup } from 'rollup';

@@ -1,11 +1,11 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
+import { parseFromValuesOrFunc } from './utils';
 import { rankGlobalFuzzy } from '../fns/sortingFns';
 import {
   type MRT_Row,
   type MRT_RowData,
   type MRT_TableInstance,
 } from '../types';
-import { parseFromValuesOrFunc } from './utils';
 
 export const getMRT_Rows = <TData extends MRT_RowData>(
   table: MRT_TableInstance<TData>,
@@ -250,9 +250,12 @@ export const getMRT_SelectAllHandler =
       refs: { lastSelectedRowId },
     } = table;
 
-    selectAllMode === 'all' || forceAll
-      ? table.toggleAllRowsSelected(value ?? (event as any).target.checked)
-      : table.toggleAllPageRowsSelected(value ?? (event as any).target.checked);
+    const checked = value ?? (event as any).target.checked;
+    if (selectAllMode === 'all' || forceAll) {
+      table.toggleAllRowsSelected(checked);
+    } else {
+      table.toggleAllPageRowsSelected(checked);
+    }
     if (enableRowPinning && rowPinningDisplayMode?.includes('select')) {
       table.setRowPinning({ bottom: [], top: [] });
     }
