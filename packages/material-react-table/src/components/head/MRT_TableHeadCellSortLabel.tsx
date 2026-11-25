@@ -82,11 +82,10 @@ export const MRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
           {...rest}
           sx={(theme) => ({
             '.MuiTableSortLabel-icon': {
-              color: `${
-                theme.palette.mode === 'dark'
-                  ? theme.palette.text.primary
-                  : theme.palette.text.secondary
-              } !important`,
+              color: `${(theme.vars ?? theme).palette.text.secondary} !important`,
+              ...theme.applyStyles('dark', {
+                color: `${(theme.vars ?? theme).palette.text.primary} !important`,
+              }),
             },
             flex: '0 0',
             opacity: isSorted ? 1 : 0.3,

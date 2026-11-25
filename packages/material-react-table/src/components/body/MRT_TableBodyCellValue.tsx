@@ -93,15 +93,15 @@ export const MRT_TableBodyCellValue = <TData extends MRT_RowData>({
               key={key}
               sx={
                 match
-                  ? {
+                  ? (theme) => ({
                       backgroundColor: matchHighlightColor,
                       borderRadius: '2px',
-                      color: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? theme.palette.common.white
-                          : theme.palette.common.black,
+                      color: theme.palette.common.black,
                       padding: '2px 1px',
-                    }
+                      ...theme.applyStyles('dark', {
+                        color: theme.palette.common.white,
+                      }),
+                    })
                   : undefined
               }
             >

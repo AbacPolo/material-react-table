@@ -9,6 +9,7 @@ import {
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { type Theme } from '@mui/material/styles';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
@@ -93,63 +94,66 @@ export const MRT_GlobalFilterTextField = <TData extends MRT_RowData>({
       unmountOnExit
     >
       <TextField
-        inputProps={{
-          autoComplete: 'off',
-          ...textFieldProps.inputProps,
-        }}
         onChange={handleChange}
         placeholder={localization.search}
         size="small"
         value={searchValue ?? ''}
         variant="outlined"
         {...textFieldProps}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Tooltip title={localization.clearSearch ?? ''}>
-                <span>
-                  <IconButton
-                    aria-label={localization.clearSearch}
-                    disabled={!searchValue?.length}
-                    onClick={handleClear}
-                    size="small"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </InputAdornment>
-          ),
-          startAdornment: enableGlobalFilterModes ? (
-            <InputAdornment position="start">
-              <Tooltip title={localization.changeSearchMode}>
-                <IconButton
-                  aria-label={localization.changeSearchMode}
-                  onClick={handleGlobalFilterMenuOpen}
-                  size="small"
-                  sx={{ height: '1.75rem', width: '1.75rem' }}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          ) : (
-            <SearchIcon style={{ marginRight: '4px' }} />
-          ),
-          ...textFieldProps.InputProps,
-          sx: (theme) => ({
-            mb: 0,
-            ...(parseFromValuesOrFunc(
-              textFieldProps?.InputProps?.sx,
-              theme,
-            ) as any),
-          }),
-        }}
         inputRef={(inputRef) => {
           searchInputRef.current = inputRef;
           if (textFieldProps?.inputRef) {
             textFieldProps.inputRef = inputRef;
           }
+        }}
+        slotProps={{
+          ...textFieldProps.slotProps,
+          htmlInput: {
+            autoComplete: 'off',
+            ...(textFieldProps.slotProps?.htmlInput as any),
+          },
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <Tooltip title={localization.clearSearch ?? ''}>
+                  <span>
+                    <IconButton
+                      aria-label={localization.clearSearch}
+                      disabled={!searchValue?.length}
+                      onClick={handleClear}
+                      size="small"
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </InputAdornment>
+            ),
+            startAdornment: enableGlobalFilterModes ? (
+              <InputAdornment position="start">
+                <Tooltip title={localization.changeSearchMode}>
+                  <IconButton
+                    aria-label={localization.changeSearchMode}
+                    onClick={handleGlobalFilterMenuOpen}
+                    size="small"
+                    sx={{ height: '1.75rem', width: '1.75rem' }}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>
+              </InputAdornment>
+            ) : (
+              <SearchIcon style={{ marginRight: '4px' }} />
+            ),
+            ...(textFieldProps.slotProps?.input as any),
+            sx: (theme: Theme) => ({
+              mb: 0,
+              ...(parseFromValuesOrFunc(
+                (textFieldProps.slotProps?.input as any)?.sx,
+                theme,
+              ) as any),
+            }),
+          },
         }}
       />
       <MRT_FilterOptionMenu

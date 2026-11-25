@@ -75,6 +75,7 @@ import { type MRT_SortingFns } from './fns/sortingFns';
 import { type MRT_Icons } from './icons';
 
 export type { MRT_Icons };
+
 export type DropdownOption =
   | string
   | {
@@ -92,6 +93,16 @@ export type MRT_AggregationFn<TData extends MRT_RowData> =
 
 export type MRT_AggregationOption = keyof typeof MRT_AggregationFns & string;
 
+/*
+ * Material UI V9 removed the props listed in the `MRT_Removed*Props` interfaces. They are declared as
+ * `never` so TypeScript always reports them, including in object literals returned from callbacks
+ * such as `useMemo`, where its excess-property check can be skipped.
+ */
+export type MRT_AlertProps = AlertProps & MRT_RemovedComponentsProps;
+
+export type MRT_AutocompleteProps = AutocompleteProps<any, any, any, any> &
+  MRT_RemovedAutocompleteProps;
+
 export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = Omit<
   Cell<TData, TValue>,
   'column' | 'row'
@@ -99,7 +110,7 @@ export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = Omit<
   column: MRT_Column<TData, TValue>;
   row: MRT_Row<TData>;
 };
-
+export type MRT_CheckboxProps = CheckboxProps & MRT_RemovedSwitchBaseProps;
 export type MRT_Column<TData extends MRT_RowData, TValue = unknown> = Omit<
   Column<TData, TValue>,
   'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
@@ -110,7 +121,6 @@ export type MRT_Column<TData extends MRT_RowData, TValue = unknown> = Omit<
   footer: string;
   header: string;
 };
-
 export interface MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown>
   extends Omit<
     ColumnDef<TData, TValue>,
@@ -290,54 +300,54 @@ export interface MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown>
         column: MRT_Column<TData>;
         row: MRT_Row<TData>;
         table: MRT_TableInstance<TData>;
-      }) => TextFieldProps)
-    | TextFieldProps;
+      }) => MRT_TextFieldProps)
+    | MRT_TextFieldProps;
   muiFilterAutocompleteProps?:
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => AutocompleteProps<any, any, any, any>)
-    | AutocompleteProps<any, any, any, any>;
+      }) => MRT_AutocompleteProps)
+    | MRT_AutocompleteProps;
   muiFilterCheckboxProps?:
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
+      }) => MRT_CheckboxProps)
+    | MRT_CheckboxProps;
   muiFilterDatePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => DatePickerProps<never>)
-    | DatePickerProps<never>;
+      }) => MRT_DatePickerProps)
+    | MRT_DatePickerProps;
   muiFilterDateTimePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => DateTimePickerProps<never>)
-    | DateTimePickerProps<never>;
+      }) => MRT_DateTimePickerProps)
+    | MRT_DateTimePickerProps;
   muiFilterSliderProps?:
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
+      }) => MRT_SliderProps)
+    | MRT_SliderProps;
   muiFilterTextFieldProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => TextFieldProps)
-    | TextFieldProps;
+      }) => MRT_TextFieldProps)
+    | MRT_TextFieldProps;
   muiFilterTimePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => TimePickerProps<never>)
-    | TimePickerProps<never>;
+      }) => MRT_TimePickerProps)
+    | MRT_TimePickerProps;
   muiTableBodyCellProps?:
     | ((props: {
         cell: MRT_Cell<TData, TValue>;
@@ -389,7 +399,6 @@ export interface MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown>
   sortingFn?: MRT_SortingFn<TData>;
   visibleInShowHideMenu?: boolean;
 }
-
 export type MRT_ColumnFilterFnsState = Record<string, MRT_FilterOption>;
 export type MRT_ColumnFiltersState = ColumnFiltersState;
 export type MRT_ColumnHelper<TData extends MRT_RowData> = {
@@ -411,6 +420,7 @@ export type MRT_ColumnOrderState = ColumnOrderState;
 export type MRT_ColumnPinningState = ColumnPinningState;
 export type MRT_ColumnSizingInfoState = ColumnSizingInfoState;
 export type MRT_ColumnSizingState = ColumnSizingState;
+
 export type MRT_ColumnVirtualizer<
   TScrollElement extends Element | Window = HTMLDivElement,
   TItemElement extends Element = HTMLTableCellElement,
@@ -419,6 +429,12 @@ export type MRT_ColumnVirtualizer<
   virtualPaddingLeft?: number;
   virtualPaddingRight?: number;
 };
+
+export type MRT_DatePickerProps = DatePickerProps & MRT_RemovedPickerProps;
+
+export type MRT_DateTimePickerProps = DateTimePickerProps &
+  MRT_RemovedPickerProps;
+
 export type MRT_DefinedColumnDef<
   TData extends MRT_RowData,
   TValue = unknown,
@@ -427,6 +443,7 @@ export type MRT_DefinedColumnDef<
   defaultDisplayColumn: Partial<MRT_ColumnDef<TData, TValue>>;
   id: string;
 };
+
 export type MRT_DefinedTableOptions<TData extends MRT_RowData> = Omit<
   MRT_TableOptions<TData>,
   'icons' | 'localization' | 'mrtTheme'
@@ -435,7 +452,10 @@ export type MRT_DefinedTableOptions<TData extends MRT_RowData> = Omit<
   localization: MRT_Localization;
   mrtTheme: Required<MRT_Theme>;
 };
+
 export type MRT_DensityState = 'comfortable' | 'compact' | 'spacious';
+
+export type MRT_DialogProps = DialogProps & MRT_RemovedDialogProps;
 export type MRT_DisplayColumnDef<
   TData extends MRT_RowData,
   TValue = unknown,
@@ -448,45 +468,36 @@ export type MRT_DisplayColumnIds =
   | 'mrt-row-pin'
   | 'mrt-row-select'
   | 'mrt-row-spacer';
-
 export type MRT_ExpandedState = ExpandedState;
-
 export type MRT_FilterFn<TData extends MRT_RowData> =
   | FilterFn<TData>
   | MRT_FilterOption;
-
 export type MRT_FilterOption = LiteralUnion<
   keyof typeof MRT_FilterFns & string
 >;
-
 export type MRT_GroupColumnDef<TData extends MRT_RowData> =
   MRT_DisplayColumnDef<TData, any> & {
     columns: MRT_ColumnDef<TData>[];
   };
-
 export type MRT_GroupingState = GroupingState;
-
 export type MRT_Header<TData extends MRT_RowData> = Omit<
   Header<TData, unknown>,
   'column'
 > & {
   column: MRT_Column<TData>;
 };
-
 export type MRT_HeaderGroup<TData extends MRT_RowData> = Omit<
   HeaderGroup<TData>,
   'headers'
 > & {
   headers: MRT_Header<TData>[];
 };
-
 export type MRT_InternalFilterOption = {
   divider: boolean;
   label: string;
   option: string;
   symbol: string;
 };
-
 export interface MRT_Localization {
   actions: string;
   and: string;
@@ -582,8 +593,75 @@ export interface MRT_Localization {
   unpin: string;
   unpinAll: string;
 }
-
 export type MRT_PaginationState = PaginationState;
+
+export type MRT_RadioProps = MRT_RemovedSwitchBaseProps & RadioProps;
+
+export interface MRT_RemovedAutocompleteProps {
+  /** @deprecated Removed in Material UI V9. Use `slotProps.chip` instead. */
+  ChipProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps` instead. */
+  componentsProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slots.listbox` instead. */
+  ListboxComponent?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.listbox` instead. */
+  ListboxProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slots.paper` instead. */
+  PaperComponent?: never;
+  /** @deprecated Removed in Material UI V9. Use `slots.popper` instead. */
+  PopperComponent?: never;
+  /** @deprecated Removed in Material UI V9. Use `renderValue` instead. */
+  renderTags?: never;
+}
+
+export interface MRT_RemovedComponentsProps {
+  /** @deprecated Removed in Material UI V9. Use `slots` instead. */
+  components?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps` instead. */
+  componentsProps?: never;
+}
+
+export interface MRT_RemovedDialogProps {
+  /** @deprecated Removed in Material UI V9. Use `slots.backdrop` instead. */
+  BackdropComponent?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.backdrop` instead. */
+  BackdropProps?: never;
+  /** @deprecated Removed in Material UI V9. Check `reason === 'escapeKeyDown'` in `onClose` instead. */
+  disableEscapeKeyDown?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.paper` instead. */
+  PaperProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slots.transition` instead. */
+  TransitionComponent?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.transition` instead. */
+  TransitionProps?: never;
+}
+
+export interface MRT_RemovedPickerProps {
+  /** @deprecated Removed in MUI X Date Pickers V9. The accessible field DOM structure is always used. */
+  enableAccessibleFieldDOMStructure?: never;
+  /** @deprecated Removed in MUI X Date Pickers V9. Use `slotProps.field.fieldRef` instead. */
+  unstableFieldRef?: never;
+}
+
+export interface MRT_RemovedSwitchBaseProps {
+  /** @deprecated Removed in Material UI V9. Use `slotProps.input` instead. */
+  inputProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.input.ref` instead. */
+  inputRef?: never;
+}
+
+export interface MRT_RemovedTextFieldProps {
+  /** @deprecated Removed in Material UI V9. Use `slotProps.formHelperText` instead. */
+  FormHelperTextProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.inputLabel` instead. */
+  InputLabelProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.input` instead. */
+  InputProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.htmlInput` instead. */
+  inputProps?: never;
+  /** @deprecated Removed in Material UI V9. Use `slotProps.select` instead. */
+  SelectProps?: never;
+}
 
 export type MRT_Row<TData extends MRT_RowData> = Omit<
   Row<TData>,
@@ -620,6 +698,8 @@ export type MRT_RowVirtualizer<
 > = Virtualizer<TScrollElement, TItemElement> & {
   virtualRows: MRT_VirtualItem[];
 };
+
+export type MRT_SliderProps = MRT_RemovedComponentsProps & SliderProps;
 
 export type MRT_SortingFn<TData extends MRT_RowData> =
   | MRT_SortingOption
@@ -897,8 +977,8 @@ export interface MRT_TableOptions<TData extends MRT_RowData>
     | ((props: {
         row: MRT_Row<TData>;
         table: MRT_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
+      }) => MRT_DialogProps)
+    | MRT_DialogProps;
   muiDetailPanelProps?:
     | ((props: {
         row: MRT_Row<TData>;
@@ -909,16 +989,16 @@ export interface MRT_TableOptions<TData extends MRT_RowData>
     | ((props: {
         row: MRT_Row<TData>;
         table: MRT_TableInstance<TData>;
-      }) => DialogProps)
-    | DialogProps;
+      }) => MRT_DialogProps)
+    | MRT_DialogProps;
   muiEditTextFieldProps?:
     | ((props: {
         cell: MRT_Cell<TData>;
         column: MRT_Column<TData>;
         row: MRT_Row<TData>;
         table: MRT_TableInstance<TData>;
-      }) => TextFieldProps)
-    | TextFieldProps;
+      }) => MRT_TextFieldProps)
+    | MRT_TextFieldProps;
   muiExpandAllButtonProps?:
     | ((props: { table: MRT_TableInstance<TData> }) => IconButtonProps)
     | IconButtonProps;
@@ -933,48 +1013,48 @@ export interface MRT_TableOptions<TData extends MRT_RowData>
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => AutocompleteProps<any, any, any, any>)
-    | AutocompleteProps<any, any, any, any>;
+      }) => MRT_AutocompleteProps)
+    | MRT_AutocompleteProps;
   muiFilterCheckboxProps?:
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => CheckboxProps)
-    | CheckboxProps;
+      }) => MRT_CheckboxProps)
+    | MRT_CheckboxProps;
   muiFilterDatePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => DatePickerProps<never>)
-    | DatePickerProps<never>;
+      }) => MRT_DatePickerProps)
+    | MRT_DatePickerProps;
   muiFilterDateTimePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => DateTimePickerProps<never>)
-    | DateTimePickerProps<never>;
+      }) => MRT_DateTimePickerProps)
+    | MRT_DateTimePickerProps;
   muiFilterSliderProps?:
     | ((props: {
         column: MRT_Column<TData>;
         table: MRT_TableInstance<TData>;
-      }) => SliderProps)
-    | SliderProps;
+      }) => MRT_SliderProps)
+    | MRT_SliderProps;
   muiFilterTextFieldProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => TextFieldProps)
-    | TextFieldProps;
+      }) => MRT_TextFieldProps)
+    | MRT_TextFieldProps;
   muiFilterTimePickerProps?:
     | ((props: {
         column: MRT_Column<TData>;
         rangeFilterIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => TimePickerProps<never>)
-    | TimePickerProps<never>;
+      }) => MRT_TimePickerProps)
+    | MRT_TimePickerProps;
   muiLinearProgressProps?:
     | ((props: {
         isTopToolbar: boolean;
@@ -1005,18 +1085,18 @@ export interface MRT_TableOptions<TData extends MRT_RowData>
       }) => IconButtonProps)
     | IconButtonProps;
   muiSearchTextFieldProps?:
-    | ((props: { table: MRT_TableInstance<TData> }) => TextFieldProps)
-    | TextFieldProps;
+    | ((props: { table: MRT_TableInstance<TData> }) => MRT_TextFieldProps)
+    | MRT_TextFieldProps;
   muiSelectAllCheckboxProps?:
-    | ((props: { table: MRT_TableInstance<TData> }) => CheckboxProps)
-    | CheckboxProps;
+    | ((props: { table: MRT_TableInstance<TData> }) => MRT_CheckboxProps)
+    | MRT_CheckboxProps;
   muiSelectCheckboxProps?:
     | ((props: {
         row: MRT_Row<TData>;
         staticRowIndex?: number;
         table: MRT_TableInstance<TData>;
-      }) => CheckboxProps | RadioProps)
-    | (CheckboxProps | RadioProps);
+      }) => MRT_CheckboxProps | MRT_RadioProps)
+    | (MRT_CheckboxProps | MRT_RadioProps);
   muiSkeletonProps?:
     | ((props: {
         cell: MRT_Cell<TData>;
@@ -1087,8 +1167,8 @@ export interface MRT_TableOptions<TData extends MRT_RowData>
     | ((props: { table: MRT_TableInstance<TData> }) => ChipProps)
     | ChipProps;
   muiToolbarAlertBannerProps?:
-    | ((props: { table: MRT_TableInstance<TData> }) => AlertProps)
-    | AlertProps;
+    | ((props: { table: MRT_TableInstance<TData> }) => MRT_AlertProps)
+    | MRT_AlertProps;
   muiTopToolbarProps?:
     | ((props: { table: MRT_TableInstance<TData> }) => BoxProps)
     | BoxProps;
@@ -1261,6 +1341,8 @@ export interface MRT_TableState<TData extends MRT_RowData> extends TableState {
   showToolbarDropZone: boolean;
 }
 
+export type MRT_TextFieldProps = MRT_RemovedTextFieldProps & TextFieldProps;
+
 export interface MRT_Theme {
   baseBackgroundColor: string;
   cellNavigationOutlineColor: string;
@@ -1270,6 +1352,8 @@ export interface MRT_Theme {
   pinnedRowBackgroundColor: string;
   selectedRowBackgroundColor: string;
 }
+
+export type MRT_TimePickerProps = MRT_RemovedPickerProps & TimePickerProps;
 
 export type MRT_Updater<T> = Updater<T>;
 

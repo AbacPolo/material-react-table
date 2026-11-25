@@ -36,7 +36,7 @@ View [Documentation](https://www.material-react-table.com/)
 
 ### _Quickly Create React Data Tables with Material Design_
 
-### **Built with [Material UI <sup>V6</sup>](https://mui.com) and [TanStack Table <sup>V8</sup>](https://tanstack.com/table/v8)**
+### **Built with [Material UI <sup>V9</sup>](https://mui.com) and [TanStack Table <sup>V8</sup>](https://tanstack.com/table/v8)**
 
 <img src="https://material-react-table.com/banner.png" alt="MRT" height="50" />
 
@@ -114,9 +114,11 @@ _**Fully Fleshed out [Docs](https://www.material-react-table.com/docs/guides#gui
 
 View the full [Installation Docs](https://www.material-react-table.com/docs/getting-started/install)
 
+> Upgrading from the Material UI V6 version of Material React Table? See the [Material UI V9 migration guide](./MIGRATION-MUI-V9.md).
+
 1. Ensure that you have React 18 or later installed
 
-2. Install Peer Dependencies (Material UI V6)
+2. Install Peer Dependencies (Material UI V9 and MUI X Date Pickers V9)
 
 ```bash
 npm install @mui/material @mui/x-date-pickers @mui/icons-material @emotion/react @emotion/styled

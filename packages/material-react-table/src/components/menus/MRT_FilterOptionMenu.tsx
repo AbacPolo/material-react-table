@@ -243,14 +243,16 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
       anchorEl={anchorEl}
       anchorOrigin={{ horizontal: 'right', vertical: 'center' }}
       disableScrollLock
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
-        },
-      }}
       onClose={() => setAnchorEl(null)}
       open={!!anchorEl}
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: {
+            backgroundColor: menuBackgroundColor,
+          },
+        },
+      }}
       {...rest}
     >
       {(header && column && columnDef

@@ -9,6 +9,7 @@ import {
 } from 'react';
 import Autocomplete, {
   type AutocompleteInputChangeReason,
+  type AutocompleteRenderInputParams,
 } from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
@@ -21,6 +22,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { debounce } from '@mui/material/utils';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { type PickersTextFieldProps } from '@mui/x-date-pickers/PickersTextField';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu';
 import {
@@ -388,7 +390,20 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
     }),
   };
 
+  // Pickers render a PickersTextField whose html input is hidden, so placeholder
+  // and htmlInput props from the regular filter text field do not apply to it.
+  const { placeholder: _placeholder, ...commonPickerTextFieldProps } =
+    commonTextFieldProps;
+  const pickerTextFieldProps = {
+    ...commonPickerTextFieldProps,
+    slotProps: {
+      ...commonTextFieldProps.slotProps,
+      htmlInput: textFieldProps.slotProps?.htmlInput,
+    },
+  } as PickersTextFieldProps;
+
   const commonDatePickerProps = {
+    disabled: !!filterChipLabel,
     onChange: (newDate: any) => {
       handleChange(newDate);
     },
@@ -409,7 +424,7 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
               ...timePickerProps?.slotProps?.field,
             },
             textField: {
-              ...commonTextFieldProps,
+              ...pickerTextFieldProps,
               ...timePickerProps?.slotProps?.textField,
             },
           }}
@@ -426,7 +441,7 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
               ...dateTimePickerProps?.slotProps?.field,
             },
             textField: {
-              ...commonTextFieldProps,
+              ...pickerTextFieldProps,
               ...dateTimePickerProps?.slotProps?.textField,
             },
           }}
@@ -443,7 +458,7 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
               ...datePickerProps?.slotProps?.field,
             },
             textField: {
-              ...commonTextFieldProps,
+              ...pickerTextFieldProps,
               ...datePickerProps?.slotProps?.textField,
             },
           }}
@@ -463,7 +478,9 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
             dropdownOptions?.map((option) => getValueAndLabel(option)) ?? []
           }
           {...autocompleteProps}
-          renderInput={(builtinTextFieldProps: TextFieldProps) => (
+          renderInput={(
+            builtinTextFieldProps: AutocompleteRenderInputParams,
+          ) => (
             <TextField
               {...commonTextFieldProps}
               {...builtinTextFieldProps}
@@ -472,16 +489,13 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
                 ...builtinTextFieldProps.slotProps,
                 ...commonTextFieldProps.slotProps,
                 htmlInput: {
-                  ...builtinTextFieldProps.inputProps,
-                  ...builtinTextFieldProps.slotProps?.htmlInput,
-                  ...commonTextFieldProps?.slotProps?.htmlInput,
+                  ...builtinTextFieldProps.slotProps.htmlInput,
+                  ...(commonTextFieldProps.slotProps?.htmlInput as any),
                 },
                 input: {
-                  ...builtinTextFieldProps.InputProps,
-                  ...builtinTextFieldProps.slotProps?.input,
-                  startAdornment:
-                    //@ts-expect-error
-                    commonTextFieldProps?.slotProps?.input?.startAdornment,
+                  ...builtinTextFieldProps.slotProps.input,
+                  startAdornment: (commonTextFieldProps.slotProps?.input as any)
+                    ?.startAdornment,
                 },
               }}
             />

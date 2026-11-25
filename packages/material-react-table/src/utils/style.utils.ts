@@ -1,6 +1,5 @@
 import { type CSSProperties } from 'react';
-import { alpha, darken, lighten } from '@mui/material/styles';
-import { type Theme } from '@mui/material/styles';
+import { type CSSObject, type Theme } from '@mui/material/styles';
 import { type TableCellProps } from '@mui/material/TableCell';
 import { type TooltipProps } from '@mui/material/Tooltip';
 import { parseFromValuesOrFunc } from './utils';
@@ -15,6 +14,23 @@ import {
 
 export const parseCSSVarId = (id: string) => id.replace(/[^a-zA-Z0-9]/g, '_');
 
+/**
+ * With `colorSchemes`, `theme.palette` is fixed to the default scheme, so the
+ * palette of the scheme that is currently applied has to be picked explicitly.
+ */
+export const getActiveColorSchemeTheme = (
+  muiTheme: Theme,
+  colorScheme: string | undefined,
+): Theme => {
+  if (!colorScheme) return muiTheme;
+  const { colorSchemes } = muiTheme as Theme & {
+    colorSchemes?: Record<string, { palette?: Theme['palette'] }>;
+  };
+  const activePalette = colorSchemes?.[colorScheme]?.palette;
+  if (!activePalette || activePalette === muiTheme.palette) return muiTheme;
+  return { ...muiTheme, palette: activePalette };
+};
+
 export const getMRTTheme = <TData extends MRT_RowData>(
   mrtTheme: MRT_TableOptions<TData>['mrtTheme'],
   muiTheme: Theme,
@@ -23,7 +39,7 @@ export const getMRTTheme = <TData extends MRT_RowData>(
   const baseBackgroundColor =
     mrtThemeOverrides?.baseBackgroundColor ??
     (muiTheme.palette.mode === 'dark'
-      ? lighten(muiTheme.palette.background.default, 0.05)
+      ? muiTheme.lighten(muiTheme.palette.background.default, 0.05)
       : muiTheme.palette.background.default);
   return {
     baseBackgroundColor,
@@ -31,11 +47,17 @@ export const getMRTTheme = <TData extends MRT_RowData>(
     draggingBorderColor: muiTheme.palette.primary.main,
     matchHighlightColor:
       muiTheme.palette.mode === 'dark'
-        ? darken(muiTheme.palette.warning.dark, 0.25)
-        : lighten(muiTheme.palette.warning.light, 0.5),
-    menuBackgroundColor: lighten(baseBackgroundColor, 0.07),
-    pinnedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.1),
-    selectedRowBackgroundColor: alpha(muiTheme.palette.primary.main, 0.2),
+        ? muiTheme.darken(muiTheme.palette.warning.dark, 0.25)
+        : muiTheme.lighten(muiTheme.palette.warning.light, 0.5),
+    menuBackgroundColor: muiTheme.lighten(baseBackgroundColor, 0.07),
+    pinnedRowBackgroundColor: muiTheme.alpha(
+      muiTheme.palette.primary.main,
+      0.1,
+    ),
+    selectedRowBackgroundColor: muiTheme.alpha(
+      muiTheme.palette.primary.main,
+      0.2,
+    ),
     ...mrtThemeOverrides,
   };
 };
@@ -58,28 +80,31 @@ export const getCommonPinnedCellStyles = <TData extends MRT_RowData>({
   column?: MRT_Column<TData>;
   table: MRT_TableInstance<TData>;
   theme: Theme;
-}) => {
+}): CSSObject => {
   const { baseBackgroundColor } = table.options.mrtTheme;
   const isPinned = column?.getIsPinned();
 
   return {
     '&[data-pinned="true"]': {
       '&:before': {
-        backgroundColor: alpha(
-          darken(
-            baseBackgroundColor,
-            theme.palette.mode === 'dark' ? 0.05 : 0.01,
-          ),
+        backgroundColor: theme.alpha(
+          theme.darken(baseBackgroundColor, 0.01),
           0.97,
         ),
         boxShadow: column
           ? isPinned === 'left' && column.getIsLastColumn(isPinned)
-            ? `-4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
+            ? `-4px 0 4px -4px ${theme.alpha(theme.palette.grey[700], 0.5)} inset`
             : isPinned === 'right' && column.getIsFirstColumn(isPinned)
-              ? `4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
+              ? `4px 0 4px -4px ${theme.alpha(theme.palette.grey[700], 0.5)} inset`
               : undefined
           : undefined,
         ...commonCellBeforeAfterStyles,
+        ...theme.applyStyles('dark', {
+          backgroundColor: theme.alpha(
+            theme.darken(baseBackgroundColor, 0.05),
+            0.97,
+          ),
+        }),
       },
     },
   };

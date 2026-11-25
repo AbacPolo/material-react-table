@@ -1,12 +1,6 @@
 import { type DragEvent, memo, useMemo, useRef } from 'react';
 import { type VirtualItem } from '@tanstack/react-virtual';
-import {
-  alpha,
-  darken,
-  lighten,
-  type Theme,
-  useTheme,
-} from '@mui/material/styles';
+import { type Theme, useTheme } from '@mui/material/styles';
 import TableRow, { type TableRowProps } from '@mui/material/TableRow';
 import { Memo_MRT_TableBodyCell, MRT_TableBodyCell } from './MRT_TableBodyCell';
 import { MRT_TableDetailPanel } from './MRT_TableDetailPanel';
@@ -152,14 +146,26 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
       ? pinnedRowBackgroundColor
       : undefined;
 
-  const cellHighlightColorHover =
-    tableRowProps?.hover !== false
-      ? isRowSelected
-        ? cellHighlightColor
-        : theme.palette.mode === 'dark'
-          ? `${lighten(baseBackgroundColor, 0.3)}`
-          : `${darken(baseBackgroundColor, 0.3)}`
-      : undefined;
+  const getHoveredCellStyles = (theme: Theme) => {
+    if (tableRowProps?.hover === false) return undefined;
+    if (isRowSelected) {
+      if (!cellHighlightColor) return undefined;
+      return {
+        backgroundColor: theme.alpha(cellHighlightColor, 0.3),
+        ...commonCellBeforeAfterStyles,
+      };
+    }
+    return {
+      backgroundColor: theme.alpha(theme.darken(baseBackgroundColor, 0.3), 0.3),
+      ...commonCellBeforeAfterStyles,
+      ...theme.applyStyles('dark', {
+        backgroundColor: theme.alpha(
+          theme.lighten(baseBackgroundColor, 0.3),
+          0.3,
+        ),
+      }),
+    };
+  };
 
   return (
     <>
@@ -184,12 +190,7 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
           ...tableRowProps?.style,
         }}
         sx={(theme: Theme) => ({
-          '&:hover td:after': cellHighlightColorHover
-            ? {
-                backgroundColor: alpha(cellHighlightColorHover, 0.3),
-                ...commonCellBeforeAfterStyles,
-              }
-            : undefined,
+          '&:hover td:after': getHoveredCellStyles(theme),
           backgroundColor: `${baseBackgroundColor} !important`,
           bottom:
             !virtualRow && bottomPinnedIndex !== undefined && isRowPinned

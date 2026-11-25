@@ -86,15 +86,17 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
       <Menu
         anchorEl={actionCellRef.current}
         disableScrollLock
-        MenuListProps={{
-          dense: density === 'compact',
-          sx: {
-            backgroundColor: menuBackgroundColor,
-          },
-        }}
         onClick={(event) => event.stopPropagation()}
         onClose={handleClose}
         open={!!cell}
+        slotProps={{
+          list: {
+            dense: density === 'compact',
+            sx: {
+              backgroundColor: menuBackgroundColor,
+            },
+          },
+        }}
         transformOrigin={{ horizontal: -100, vertical: 8 }}
         {...rest}
       >

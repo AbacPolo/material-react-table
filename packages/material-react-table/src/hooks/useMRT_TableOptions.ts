@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { useTheme } from '@mui/material/styles';
+import { useColorScheme, useTheme } from '@mui/material/styles';
 import { MRT_AggregationFns } from '../fns/aggregationFns';
 import { MRT_FilterFns } from '../fns/filterFns';
 import { MRT_SortingFns } from '../fns/sortingFns';
@@ -21,7 +21,7 @@ import {
   type MRT_RowData,
   type MRT_TableOptions,
 } from '../types';
-import { getMRTTheme } from '../utils/style.utils';
+import { getActiveColorSchemeTheme, getMRTTheme } from '../utils/style.utils';
 
 export const MRT_DefaultColumn = {
   filterVariant: 'text',
@@ -115,6 +115,11 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   ...rest
 }: MRT_TableOptions<TData>) => {
   const theme = useTheme();
+  const { colorScheme } = useColorScheme();
+  const activeTheme = useMemo(
+    () => getActiveColorSchemeTheme(theme, colorScheme),
+    [theme, colorScheme],
+  );
 
   icons = useMemo(() => ({ ...MRT_Default_Icons, ...icons }), [icons]);
   localization = useMemo(
@@ -124,7 +129,10 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     }),
     [localization],
   );
-  mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme]);
+  mrtTheme = useMemo(
+    () => getMRTTheme(mrtTheme, activeTheme),
+    [mrtTheme, activeTheme],
+  );
   aggregationFns = useMemo(
     () => ({ ...MRT_AggregationFns, ...aggregationFns }),
     [],

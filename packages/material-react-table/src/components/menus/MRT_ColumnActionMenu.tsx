@@ -322,14 +322,16 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
     <Menu
       anchorEl={anchorEl}
       disableScrollLock
-      MenuListProps={{
-        dense: density === 'compact',
-        sx: {
-          backgroundColor: menuBackgroundColor,
-        },
-      }}
       onClose={() => setAnchorEl(null)}
       open={!!anchorEl}
+      slotProps={{
+        list: {
+          dense: density === 'compact',
+          sx: {
+            backgroundColor: menuBackgroundColor,
+          },
+        },
+      }}
       {...rest}
     >
       {columnDef.renderColumnActionsMenuItems?.({

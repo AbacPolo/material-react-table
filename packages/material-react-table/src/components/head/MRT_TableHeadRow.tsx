@@ -1,4 +1,3 @@
-import { alpha } from '@mui/material/styles';
 import TableRow, { type TableRowProps } from '@mui/material/TableRow';
 import { MRT_TableHeadCell } from './MRT_TableHeadCell';
 import {
@@ -49,7 +48,7 @@ export const MRT_TableHeadRow = <TData extends MRT_RowData>({
       {...tableRowProps}
       sx={(theme) => ({
         backgroundColor: baseBackgroundColor,
-        boxShadow: `4px 0 8px ${alpha(theme.palette.common.black, 0.1)}`,
+        boxShadow: `4px 0 8px ${theme.alpha(theme.palette.common.black, 0.1)}`,
         display: layoutMode?.startsWith('grid') ? 'flex' : undefined,
         position:
           enableStickyHeader && layoutMode === 'semantic'

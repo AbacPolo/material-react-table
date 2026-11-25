@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react';
 import MenuItem from '@mui/material/MenuItem';
+import { type Theme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { type TextFieldProps } from '@mui/material/TextField';
 import {
@@ -139,23 +140,6 @@ export const MRT_EditCellTextField = <TData extends MRT_RowData>({
       value={value ?? ''}
       variant="standard"
       {...textFieldProps}
-      InputProps={{
-        ...(textFieldProps.variant !== 'outlined'
-          ? { disableUnderline: editDisplayMode === 'table' }
-          : {}),
-        ...textFieldProps.InputProps,
-        sx: (theme) => ({
-          mb: 0,
-          ...(parseFromValuesOrFunc(
-            textFieldProps?.InputProps?.sx,
-            theme,
-          ) as any),
-        }),
-      }}
-      inputProps={{
-        autoComplete: 'off',
-        ...textFieldProps.inputProps,
-      }}
       onBlur={handleBlur}
       onChange={handleChange}
       onClick={(e) => {
@@ -165,9 +149,29 @@ export const MRT_EditCellTextField = <TData extends MRT_RowData>({
       onCompositionEnd={() => setCompletesComposition(true)}
       onCompositionStart={() => setCompletesComposition(false)}
       onKeyDown={handleEnterKeyDown}
-      SelectProps={{
-        MenuProps: { disableScrollLock: true },
-        ...textFieldProps.SelectProps,
+      slotProps={{
+        ...textFieldProps.slotProps,
+        htmlInput: {
+          autoComplete: 'off',
+          ...(textFieldProps.slotProps?.htmlInput as any),
+        },
+        input: {
+          ...(textFieldProps.variant !== 'outlined'
+            ? { disableUnderline: editDisplayMode === 'table' }
+            : {}),
+          ...(textFieldProps.slotProps?.input as any),
+          sx: (theme: Theme) => ({
+            mb: 0,
+            ...(parseFromValuesOrFunc(
+              (textFieldProps.slotProps?.input as any)?.sx,
+              theme,
+            ) as any),
+          }),
+        },
+        select: {
+          MenuProps: { disableScrollLock: true },
+          ...(textFieldProps.slotProps?.select as any),
+        },
       }}
     >
       {textFieldProps.children ??

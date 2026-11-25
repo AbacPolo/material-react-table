@@ -81,11 +81,6 @@ export const MRT_SelectCheckbox = <TData extends MRT_RowData>({
     checked: isChecked,
     disabled:
       isLoading || (row && !row.getCanSelect()) || row?.id === 'mrt-row-create',
-    inputProps: {
-      'aria-label': selectAll
-        ? localization.toggleSelectAll
-        : localization.toggleSelectRow,
-    },
     onChange: (event) => {
       event.stopPropagation();
       if (selectAll) {
@@ -95,6 +90,13 @@ export const MRT_SelectCheckbox = <TData extends MRT_RowData>({
       }
     },
     size: (density === 'compact' ? 'small' : 'medium') as 'medium' | 'small',
+    slotProps: {
+      input: {
+        'aria-label': selectAll
+          ? localization.toggleSelectAll
+          : localization.toggleSelectRow,
+      },
+    },
     ...checkboxProps,
     onClick: (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();

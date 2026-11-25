@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import CircularProgress, {
   type CircularProgressProps,
 } from '@mui/material/CircularProgress';
-import { alpha } from '@mui/material/styles';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
 
@@ -31,9 +30,9 @@ export const MRT_TableLoadingOverlay = <TData extends MRT_RowData>({
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         alignItems: 'center',
-        backgroundColor: alpha(baseBackgroundColor, 0.5),
+        backgroundColor: theme.alpha(baseBackgroundColor, 0.5),
         bottom: 0,
         display: 'flex',
         justifyContent: 'center',
@@ -44,7 +43,7 @@ export const MRT_TableLoadingOverlay = <TData extends MRT_RowData>({
         top: 0,
         width: '100%',
         zIndex: 3,
-      }}
+      })}
     >
       {circularProgressProps?.Component ?? (
         <CircularProgress

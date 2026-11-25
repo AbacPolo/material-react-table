@@ -60,7 +60,7 @@ export const MRT_TableHeadCellResizeHandle = <TData extends MRT_RowData>({
       }}
       sx={(theme) => ({
         '&:active > hr': {
-          backgroundColor: theme.palette.info.main,
+          backgroundColor: (theme.vars ?? theme).palette.info.main,
           opacity:
             header.subHeaders.length || columnResizeMode === 'onEnd' ? 1 : 0,
         },

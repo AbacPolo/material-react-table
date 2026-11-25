@@ -1,7 +1,6 @@
 import { type DragEvent, useEffect } from 'react';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Fade from '@mui/material/Fade';
-import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { type MRT_RowData, type MRT_TableInstance } from '../../types';
 import { parseFromValuesOrFunc } from '../../utils/utils';
@@ -54,11 +53,11 @@ export const MRT_ToolbarDropZone = <TData extends MRT_RowData>({
         sx={(theme) => ({
           alignItems: 'center',
           backdropFilter: 'blur(4px)',
-          backgroundColor: alpha(
-            theme.palette.info.main,
+          backgroundColor: theme.alpha(
+            (theme.vars ?? theme).palette.info.main,
             hoveredColumn?.id === 'drop-zone' ? 0.2 : 0.1,
           ),
-          border: `dashed ${theme.palette.info.main} 2px`,
+          border: `dashed ${(theme.vars ?? theme).palette.info.main} 2px`,
           boxSizing: 'border-box',
           display: 'flex',
           height: '100%',
@@ -69,7 +68,7 @@ export const MRT_ToolbarDropZone = <TData extends MRT_RowData>({
           ...(parseFromValuesOrFunc(rest?.sx, theme) as any),
         })}
       >
-        <Typography fontStyle="italic">
+        <Typography sx={{ fontStyle: 'italic' }}>
           {localization.dropToGroupBy.replace(
             '{column}',
             draggingColumn?.columnDef?.header ?? '',
